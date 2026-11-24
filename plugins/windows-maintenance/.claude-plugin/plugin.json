@@ -1,0 +1,9 @@
+{
+  "name": "windows-maintenance",
+  "description": "Safety-first audit, clean, debloat and optimise for a Windows 11 gaming + development PC. Read-only first, approval for every change, protects games, anti-cheat and Windows security.",
+  "author": { "name": "mckenna654", "url": "https://github.com/mckenna654" },
+  "homepage": "https://github.com/mckenna654/windows-maintenance",
+  "repository": "https://github.com/mckenna654/windows-maintenance",
+  "license": "MIT",
+  "keywords": ["windows", "windows-11", "maintenance", "cleanup", "debloat", "gaming", "powershell"]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "windows-maintenance",
+  "description": "Marketplace for the windows-maintenance Claude Code plugin.",
+  "owner": { "name": "mckenna654", "url": "https://github.com/mckenna654" },
+  "plugins": [
+    {
+      "name": "windows-maintenance",
+      "source": "./plugins/windows-maintenance",
+      "description": "Safety-first audit, clean, debloat and optimise for a Windows 11 gaming + development PC. Read-only first, approval for every change, protects games, anti-cheat and Windows security.",
+      "category": "productivity",
+      "keywords": ["windows", "windows-11", "maintenance", "cleanup", "debloat", "gaming", "powershell"]
+    }
+  ]
+}

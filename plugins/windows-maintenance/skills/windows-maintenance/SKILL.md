@@ -1,6 +1,6 @@
 ---
 name: windows-maintenance
-description: Clean, diagnose and optimise a Windows 11 gaming + development PC safely. Modes - audit (read-only analysis), clean (temp/cache/leftover files), debloat (unneeded apps, startup items, services), optimise (gaming performance, drivers, power, resources), deep (everything plus a maintenance plan). Use when the user runs /windows-maintenance, or asks to clean up, speed up, debloat, tune, health-check or free disk space on their Windows PC. Always audits read-only first, estimates recoverable space, and changes nothing without explicit approval.
+description: Clean, diagnose and optimise a Windows 11 gaming + development PC safely. Modes - audit (read-only analysis), clean (temp/cache/leftover files), debloat (unneeded apps, startup items, services), optimise (gaming performance, drivers, power, resources), deep (everything plus a maintenance plan). Use when the user runs /windows-maintenance:windows-maintenance (or /windows-maintenance), or asks to clean up, speed up, debloat, tune, health-check or free disk space on their Windows PC. Always audits read-only first, estimates recoverable space, and changes nothing without explicit approval.
 argument-hint: "[audit|clean|debloat|optimise|deep]"
 ---
 
@@ -27,16 +27,21 @@ Requested mode: **$ARGUMENTS** (empty means `audit`).
 
 ## Paths and how to run scripts
 
+The skill can be installed as a plugin (it then lives in Claude Code's plugin cache) or as a
+personal skill folder, so **never hard-code its location**. When this skill loads, Claude Code
+states its folder as "Base directory for this skill: <path>". Use that exact path as `<skill>`:
+
 ```text
-Skill:    %USERPROFILE%\.claude\skills\windows-maintenance
+Skill:    <skill>   (the "Base directory for this skill" path)
 Scripts:  <skill>\scripts            Config: <skill>\config
 Output:   %LOCALAPPDATA%\WindowsMaintenance\{reports,results,backups,journal.jsonl}
 ```
 
-Run every script like this (process-scoped execution policy, nothing persisted):
+Run every script like this (process-scoped execution policy, nothing persisted). Put the
+base directory into `$wm` once per command:
 
 ```powershell
-pwsh -NoProfile -ExecutionPolicy Bypass -File "$env:USERPROFILE\.claude\skills\windows-maintenance\scripts\<Script>.ps1" <args>
+$wm = '<skill>\scripts'; pwsh -NoProfile -ExecutionPolicy Bypass -File "$wm\<Script>.ps1" <args>
 ```
 
 Use `powershell.exe` instead of `pwsh` if PowerShell 7 is missing. Scripts print machine-readable marker lines (`AUDIT_JSON:`, `AUDIT_MD:`, `CLEAN_RESULT:`, `CHANGE_RESULT:`, `BACKUP_DIR:`, `RESTORE_POINT:`, `REPORT_MD:`, `ELEVATION_REQUIRED:`). The audit takes about 20–60 s (Deep is longer), so allow a 5-minute timeout.
@@ -46,7 +51,7 @@ Use `powershell.exe` instead of `pwsh` if PowerShell 7 is missing. Scripts print
 Claude's shell is normally not elevated. Scripts never self-elevate. They report `ELEVATION_REQUIRED` and change nothing. For admin steps, tell the user a UAC prompt will appear and run:
 
 ```powershell
-Start-Process pwsh -Verb RunAs -Wait -ArgumentList '-NoProfile','-ExecutionPolicy','Bypass','-File',"$env:USERPROFILE\.claude\skills\windows-maintenance\scripts\<Script>.ps1",<args...>
+$wm = '<skill>\scripts'; Start-Process pwsh -Verb RunAs -Wait -ArgumentList '-NoProfile','-ExecutionPolicy','Bypass','-File',"`"$wm\<Script>.ps1`"",<args...>
 ```
 
 The elevated window's output is not captured. Afterwards read the result from the newest file in `%LOCALAPPDATA%\WindowsMaintenance\results` or `reports`, or from the tail of `journal.jsonl`. You can also give the user the command to paste into an Administrator terminal. The user approving the UAC prompt is their consent for that one step only.
