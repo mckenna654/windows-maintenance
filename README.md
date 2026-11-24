@@ -55,16 +55,32 @@ Most Windows "optimizer" scripts do too much at once: they delete event logs, st
 
 ## Install
 
-This repository is a Claude Code **plugin marketplace**, so installing it as a plugin gives you updates without re-downloading anything.
+This repository is a Claude Code **plugin marketplace**, so installing it as a plugin gives you updates without re-downloading anything. You need Claude Code on a Windows PC; nothing else needs installing.
 
-**In a Claude Code session:**
+### Quick start (3 steps)
+
+1. **Install.** Open PowerShell and run this one command. It adds the marketplace and installs the plugin:
+
+   ```powershell
+   claude plugin install windows-maintenance --marketplace mckenna654/windows-maintenance
+   ```
+
+2. **Turn on automatic updates.** Start Claude Code, type `/plugin`, then go to **Marketplaces** → **windows-maintenance** → enable auto-update.
+   If `/plugin` doesn't open a menu (for example in the desktop app), ask Claude:
+   *"Turn on auto-update for the windows-maintenance plugin marketplace in my user settings."*
+
+3. **Use it.** Start a new session and type `/windows-maintenance:windows-maintenance`, or just ask *"check my PC"*. It always starts with a read-only audit and asks before changing anything.
+
+### Other ways to install
+
+**Inside a Claude Code session:**
 
 ```text
 /plugin marketplace add mckenna654/windows-maintenance
 /plugin install windows-maintenance@windows-maintenance
 ```
 
-**Or from a terminal:**
+**From a terminal, in two steps:**
 
 ```powershell
 claude plugin marketplace add mckenna654/windows-maintenance
@@ -78,7 +94,8 @@ Start a new session (or run `/reload-plugins`) and the skill is ready.
 Claude Code only auto-updates third-party marketplaces once you switch it on. Do this once:
 
 - **In the app:** `/plugin` → **Marketplaces** → `windows-maintenance` → enable auto-update, **or**
-- **In settings:** add this to `%USERPROFILE%\.claude\settings.json` (merge it into any existing `extraKnownMarketplaces`):
+- **Ask Claude:** *"Turn on auto-update for the windows-maintenance plugin marketplace in my user settings."* Claude makes the settings change below for you, **or**
+- **In settings yourself:** add this to `%USERPROFILE%\.claude\settings.json` (merge it into any existing `extraKnownMarketplaces`):
 
   ```json
   {
