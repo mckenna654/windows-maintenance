@@ -203,9 +203,9 @@ Each of these appears in popular tweak tools, and each is deliberately excluded:
 All scripts are in [`scripts/`](plugins/windows-maintenance/skills/windows-maintenance/scripts) and run on Windows PowerShell 5.1 and PowerShell 7+. Claude runs them for you, but they also work by hand:
 
 ```powershell
-# locate the installed plugin's scripts folder (it lives in Claude Code's plugin cache)
-$wm = (Get-ChildItem "$env:USERPROFILE\.claude\plugins" -Recurse -Filter Invoke-Audit.ps1 |
-       Where-Object FullName -match 'windows-maintenance' | Sort-Object LastWriteTime | Select-Object -Last 1).DirectoryName
+# locate the installed version's scripts (Claude Code records the install path)
+$p  = (Get-Content "$env:USERPROFILE\.claude\plugins\installed_plugins.json" -Raw | ConvertFrom-Json).plugins.'windows-maintenance@windows-maintenance'[0].installPath
+$wm = "$p\skills\windows-maintenance\scripts"
 pwsh -NoProfile -ExecutionPolicy Bypass -File "$wm\Invoke-Audit.ps1" -Mode Audit -Label before
 ```
 
