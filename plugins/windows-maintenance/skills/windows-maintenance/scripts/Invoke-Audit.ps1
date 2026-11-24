@@ -215,7 +215,9 @@ Invoke-Section 'startup' {
     }
     $isEnabled = {
         param($approvedKey, $name)
-        $v = Get-RegValue $approvedKey $name
+        # Read via the key object: returning a byte[] through a function unrolls it into object[].
+        $v = $null
+        try { $k = Get-Item -LiteralPath $approvedKey -ErrorAction Stop; $v = $k.GetValue($name) } catch { }
         if ($v -is [byte[]] -and $v.Length -gt 0) { return (($v[0] -band 1) -eq 0) }
         return $true
     }
