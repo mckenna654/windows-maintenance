@@ -62,6 +62,9 @@ if ($b.services -and $a.services) {
     L "## Services: $($b.services.autoStartCount) -> $($a.services.autoStartCount) automatic"
     $bsv = @{}; foreach ($s in $b.services.items) { $bsv[$s.name] = $s }
     foreach ($s in $a.services.items) { $o = $bsv[$s.name]; if ($o -and $o.startMode -ne $s.startMode) { L "- $($s.displayName): $($o.startMode) -> $($s.startMode)" } }
+    # Third-party services that were automatic and are no longer listed have left Auto (e.g. set to Manual).
+    $asv = @{}; foreach ($s in $a.services.items) { $asv[$s.name] = $s }
+    foreach ($s in $b.services.items) { if ($s.class -eq 'third-party-auto' -and -not $asv.ContainsKey($s.name)) { L "- $($s.displayName): $($s.startMode) -> no longer automatic" } }
     L ''
 }
 if ($b.apps -and $a.apps) {

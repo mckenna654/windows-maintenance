@@ -29,16 +29,22 @@ if ($EnableSystemProtection) {
 }
 
 $before = Get-Points
+$maxBefore = [uint32](($before | Measure-Object -Property SequenceNumber -Maximum).Maximum)
 $res = Invoke-CimMethod -Namespace root/default -ClassName SystemRestore -MethodName CreateRestorePoint -Arguments @{ Description = $Description; RestorePointType = [uint32]12; EventType = [uint32]100 }
-$after = Get-Points
 
 if ($res.ReturnValue -ne 0) {
     $hint = if ($res.ReturnValue -eq 1058) { 'System Protection appears to be off for the system drive. Ask the user, then re-run with -EnableSystemProtection.' } else { 'See https://learn.microsoft.com/windows/win32/sr/createrestorepoint-systemrestore for the code.' }
     Write-Output "RESTORE_POINT: FAILED (code $($res.ReturnValue)). $hint"
     exit 1
 }
-if ($after.Count -gt $before.Count) {
-    $new = $after | Sort-Object SequenceNumber -Descending | Select-Object -First 1
+# Windows can take a while to list a new point, so poll before concluding it was skipped.
+$new = $null
+for ($i = 0; $i -lt 30 -and -not $new; $i++) {
+    $after = Get-Points
+    $new = $after | Where-Object { $_.SequenceNumber -gt $maxBefore } | Sort-Object SequenceNumber -Descending | Select-Object -First 1
+    if (-not $new) { Start-Sleep -Seconds 3 }
+}
+if ($new) {
     [void](Write-WMJournal @{ kind = 'restore-point'; sequence = $new.SequenceNumber; description = $new.Description; undoable = $false })
     Write-Output "RESTORE_POINT: CREATED #$($new.SequenceNumber) '$($new.Description)' at $((Get-PointTime $new).ToString('yyyy-MM-dd HH:mm'))"
     exit 0

@@ -21,10 +21,13 @@
 - `New-RestorePoint.ps1` elevated, on the "Windows skipped: a restore point under 24 h old already exists" path.
 - `claude plugin marketplace update` + `claude plugin update` pulled a new commit into the installed plugin.
 
+- Real changes (Group B): `SetServiceManual` on a third-party service (Bonjour), and `RemoveAppx` for Mail & Calendar, Dev Home and People.
+- Restore points: Windows did create one, but the original script checked the list immediately and wrongly reported "skipped". The script now polls for up to 90 s for a new sequence number.
+
 ## Not yet verified
 
-- `SetServiceManual`, `RemoveAppx`, `SetGameMode` and `EnableStartup` with `-Execute`; `Undo-Change.ps1 -Execute`.
-- `New-RestorePoint.ps1` actually creating a new point (only the 24-hour-limit path was exercised); Deep mode elevated; full runs under Windows PowerShell 5.1.
+- `SetGameMode` and `EnableStartup` with `-Execute`; `Undo-Change.ps1 -Execute`.
+- The fixed `New-RestorePoint.ps1` polling path, which can only be tested more than 24 h after the last restore point (2026-11-24 22:17). Deep mode elevated; full runs under Windows PowerShell 5.1.
 - Background auto-update arriving on its own after a push (only the manual update command has been run).
 
 ## Known issues / next steps
