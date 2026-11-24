@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "_comment": "Protection policy for windows-maintenance. Paths use forward slashes and %ENV% tokens; scripts expand them. Patterns are case-insensitive .NET regexes. Nothing in this file may be relaxed by a script flag except startup entries (see allowProtectedStartupOverride).",
+
+  "protectedPathPrefixes": [
+    "%USERPROFILE%/Documents",
+    "%USERPROFILE%/Desktop",
+    "%USERPROFILE%/Pictures",
+    "%USERPROFILE%/Videos",
+    "%USERPROFILE%/Music",
+    "%USERPROFILE%/Downloads",
+    "%USERPROFILE%/Favorites",
+    "%USERPROFILE%/Contacts",
+    "%USERPROFILE%/Saved Games",
+    "%USERPROFILE%/OneDrive",
+    "%USERPROFILE%/source",
+    "%USERPROFILE%/Projects",
+    "%USERPROFILE%/repos",
+    "%USERPROFILE%/dev",
+    "%USERPROFILE%/code",
+    "%USERPROFILE%/.ssh",
+    "%USERPROFILE%/.gnupg",
+    "%USERPROFILE%/.aws",
+    "%USERPROFILE%/.azure",
+    "%USERPROFILE%/.kube",
+    "%USERPROFILE%/.docker",
+    "%USERPROFILE%/.config",
+    "%USERPROFILE%/.claude",
+    "%USERPROFILE%/.codex",
+    "%USERPROFILE%/.vscode",
+    "%USERPROFILE%/.cargo/bin",
+    "%USERPROFILE%/.m2",
+    "%USERPROFILE%/.gitconfig",
+    "%USERPROFILE%/.git-credentials",
+    "%USERPROFILE%/.npmrc",
+    "%USERPROFILE%/.netrc",
+    "%APPDATA%/Microsoft/Credentials",
+    "%APPDATA%/Microsoft/Protect",
+    "%APPDATA%/Microsoft/Vault",
+    "%APPDATA%/Microsoft/SystemCertificates",
+    "%APPDATA%/Microsoft/Crypto",
+    "%LOCALAPPDATA%/Microsoft/Credentials",
+    "%LOCALAPPDATA%/Microsoft/Vault",
+    "%LOCALAPPDATA%/Packages",
+    "%LOCALAPPDATA%/Claude",
+    "%LOCALAPPDATA%/AnthropicClaude",
+    "%APPDATA%/Claude",
+    "%LOCALAPPDATA%/WindowsMaintenance",
+    "%STEAM%/userdata",
+    "%STEAM%/steamapps",
+    "%STEAM%/config",
+    "%PROGRAMFILES%/WindowsApps",
+    "%PROGRAMFILES%/ModifiableWindowsApps",
+    "%SYSTEMDRIVE%/XboxGames",
+    "%PROGRAMDATA%/Microsoft/Windows Defender",
+    "%PROGRAMDATA%/Microsoft/Crypto",
+    "%PROGRAMDATA%/Epic/EpicGamesLauncher/Data/Manifests",
+    "%SYSTEMROOT%/Installer",
+    "%SYSTEMROOT%/WinSxS",
+    "%SYSTEMROOT%/System32",
+    "%SYSTEMROOT%/SysWOW64",
+    "%SYSTEMROOT%/Prefetch",
+    "%SYSTEMROOT%/System32/winevt",
+    "%SYSTEMROOT%/System32/DriverStore"
+  ],
+
+  "neverCleanRoots": [
+    "%SYSTEMDRIVE%/",
+    "%USERPROFILE%",
+    "%APPDATA%",
+    "%LOCALAPPDATA%",
+    "%LOCALAPPDATA%/Microsoft",
+    "%LOCALAPPDATA%/Microsoft/Windows",
+    "%PROGRAMDATA%",
+    "%PROGRAMFILES%",
+    "%PROGRAMFILES(X86)%",
+    "%SYSTEMROOT%",
+    "%STEAM%"
+  ],
+
+  "excludeDirNamesDuringDelete": [
+    ".git", ".svn", ".hg",
+    "save", "saves", "saved", "savegames", "savedgames", "saved games", "my games",
+    "userdata", "steamapps", "profiles.ini",
+    "Login Data", "Cookies", "Local Storage", "IndexedDB", "Session Storage",
+    "Network", "Sync Data", "Extensions", "Local Extension Settings",
+    "claude", "WindowsMaintenance"
+  ],
+
+  "excludeFileExtensionsDuringDelete": [
+    ".sav", ".save", ".sl2", ".ess", ".pem", ".key", ".pfx", ".p12", ".kdbx", ".ovpn", ".ppk"
+  ],
+
+  "protectedProcessPatterns": [
+    "^steam$", "^steamwebhelper$", "^steamservice$",
+    "^XboxPcApp$", "^XboxPcAppFT$", "^gamingservices", "^GameBar", "^XboxGameBarWidgets$",
+    "^RadeonSoftware$", "^AMDRSServ$", "^AMDRSSrcExt$", "^amdow$", "^atieclxx$", "^atiesrxx$", "^amdfendrsr$", "^AMDNoiseSuppression$",
+    "^Moonlight$", "^sunshine", "^apollo", "^parsecd$",
+    "^obs64$", "^obs32$", "^Streamlabs", "^XSplit",
+    "^EasyAntiCheat", "^BEService", "^BEDaisy", "^vgc$", "^vgtray$", "^FACEIT", "^EAAntiCheat", "^PnkBstr", "^GameGuard", "^nProtect", "^xigncode",
+    "^MsMpEng$", "^NisSrv$", "^SecurityHealth", "^MpDefenderCoreService$", "^smartscreen$"
+  ],
+
+  "protectedServicePatterns": [
+    "^WinDefend$", "^WdNisSvc$", "^WdNisDrv$", "^WdFilter$", "^WdBoot$", "^Sense$", "^SecurityHealthService$", "^wscsvc$",
+    "^mpssvc$", "^BFE$", "^EventLog$", "^CryptSvc$", "^KeyIso$", "^VaultSvc$", "^SamSs$", "^Netlogon$", "^SgrmBroker$",
+    "^wuauserv$", "^UsoSvc$", "^WaaSMedicSvc$", "^BITS$", "^DoSvc$", "^TrustedInstaller$", "^msiserver$",
+    "^AppXSvc$", "^ClipSVC$", "^LicenseManager$", "^InstallService$", "^TokenBroker$", "^wlidsvc$", "^StorSvc$",
+    "^Xbl", "^Xbox", "^GamingServices", "^GameInput", "^BcastDVRUserService", "^XboxGipSvc$",
+    "^AMD", "^amd", "^Radeon", "^atiesrxx$", "^amdfendr",
+    "^Steam Client Service$", "^SunshineService$", "^sunshinesvc$", "^ApolloService$", "^Parsec", "^Tailscale$", "^ZeroTierOneService$",
+    "^EasyAntiCheat", "^BEService$", "^vgc$", "^vgk$", "^FACEIT", "^EAAntiCheat", "^PnkBstr", "^ESEADriver", "^npggsvc$", "^xhunter", "^Denuvo", "^mhyprot",
+    "^Audiosrv$", "^AudioEndpointBuilder$", "^RtkAudioUniversalService$", "^Schedule$", "^RpcSs$", "^DcomLaunch$", "^Power$", "^ProfSvc$", "^Winmgmt$",
+    "^Dhcp$", "^Dnscache$", "^NlaSvc$", "^nsi$", "^WlanSvc$", "^LanmanWorkstation$", "^SysMain$", "^WSearch$", "^hidserv$", "^TabletInputService$", "^Themes$"
+  ],
+
+  "protectedAppxPatterns": [
+    "Xbox", "GamingApp", "GamingServices", "Microsoft\\.GameInput",
+    "Microsoft\\.WindowsStore", "Microsoft\\.StorePurchaseApp", "Microsoft\\.DesktopAppInstaller",
+    "Microsoft\\.SecHealthUI", "Microsoft\\.Windows\\.SecHealthUI", "Microsoft\\.Windows\\.ShellExperienceHost", "Microsoft\\.Windows\\.StartMenuExperienceHost",
+    "Microsoft\\.VCLibs", "Microsoft\\.UI\\.Xaml", "Microsoft\\.NET\\.", "Microsoft\\.WindowsAppRuntime", "Microsoft\\.Services\\.Store",
+    "Microsoft\\.HEVCVideoExtension", "Microsoft\\.HEIFImageExtension", "Microsoft\\.VP9VideoExtensions", "Microsoft\\.WebMediaExtensions",
+    "Microsoft\\.WebpImageExtension", "Microsoft\\.AV1VideoExtension", "Microsoft\\.RawImageExtension", "Microsoft\\.MPEG2VideoExtension", "Microsoft\\.AVCEncoderVideoExtension", "Microsoft\\.DolbyAudioExtensions",
+    "AdvancedMicroDevicesInc", "AMDRadeonSoftware", "RealtekSemiconductor", "NVIDIACorp", "DolbyLaboratories",
+    "Microsoft\\.WindowsTerminal", "Microsoft\\.WindowsNotepad", "Microsoft\\.WindowsCalculator", "Microsoft\\.Windows\\.Photos",
+    "Microsoft\\.ScreenSketch", "Microsoft\\.Paint", "Microsoft\\.MicrosoftEdge", "Microsoft\\.Edge", "Microsoft\\.OneDrive",
+    "Microsoft\\.PowerShell", "Microsoft\\.WindowsCamera", "Microsoft\\.AAD\\.BrokerPlugin", "Microsoft\\.AccountsControl", "Microsoft\\.LockApp",
+    "MicrosoftWindows\\.Client\\.", "Microsoft\\.Windows\\.CloudExperienceHost", "Microsoft\\.Win32WebViewHost", "Microsoft\\.ECApp", "WindowsSubsystemForLinux", "MicrosoftCorporationII\\.WindowsSubsystemForLinux"
+  ],
+
+  "protectedStartupPatterns": [
+    "SecurityHealth", "Windows Defender", "WindowsDefender",
+    "Steam", "Xbox", "GameBar", "GamingServices",
+    "Radeon", "\\bAMD\\b", "AMDNoiseSuppression", "Adrenalin", "\\\\AMD\\\\CNext",
+    "Moonlight", "Sunshine", "Apollo", "Parsec", "Tailscale", "ZeroTier",
+    "\\bOBS\\b", "obs64", "Streamlabs",
+    "EasyAntiCheat", "BattlEye", "Vanguard", "vgtray", "FACEIT", "EAAntiCheat",
+    "OneDrive", "RtkAudUService", "Realtek", "Bluetooth", "Synaptics"
+  ],
+
+  "allowProtectedStartupOverride": true,
+  "_allowProtectedStartupOverride": "Disabling a protected startup entry (e.g. Steam launching at login) is reversible and does not break functionality, so Invoke-Change.ps1 accepts -AllowProtectedStartup ONLY when the user has named that exact entry. Services, Appx packages and paths have no override."
+}

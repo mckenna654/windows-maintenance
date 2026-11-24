@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "_comment": "Cleanup catalog. tier 1 = regenerable, low impact; tier 2 = regenerable but has a cost (re-download, shader recompile, lost diagnostics) - explain before offering; tier 3 = review-only, never deleted by Invoke-Clean without -AllowTier3 and a per-item user approval. method: files-older-than | file | tool-command | delivery-optimization | dism-component-cleanup | recycle-bin | report-only. Paths: forward slashes, %ENV% and %STEAM% tokens, '*' allowed in a single path segment.",
+
+  "targets": [
+    { "id": "user-temp", "label": "User temp folder", "category": "temp", "tier": 1, "scope": "user",
+      "method": "files-older-than", "minAgeDays": 3, "paths": ["%TEMP%"],
+      "excludeNames": ["claude", "WindowsMaintenance", "vscode-inno-updater", "chocolatey"],
+      "note": "Only files untouched for 3+ days; open/locked files are skipped." },
+
+    { "id": "windows-temp", "label": "Windows temp folder", "category": "temp", "tier": 1, "scope": "admin",
+      "method": "files-older-than", "minAgeDays": 3, "paths": ["%SYSTEMROOT%/Temp"] },
+
+    { "id": "user-wer", "label": "Windows Error Reporting (user)", "category": "logs", "tier": 1, "scope": "user",
+      "method": "files-older-than", "minAgeDays": 7, "paths": ["%LOCALAPPDATA%/Microsoft/Windows/WER"] },
+
+    { "id": "system-wer", "label": "Windows Error Reporting (system)", "category": "logs", "tier": 1, "scope": "admin",
+      "method": "files-older-than", "minAgeDays": 7, "paths": ["%PROGRAMDATA%/Microsoft/Windows/WER"] },
+
+    { "id": "user-crashdumps", "label": "Application crash dumps", "category": "logs", "tier": 1, "scope": "user",
+      "method": "files-older-than", "minAgeDays": 14, "paths": ["%LOCALAPPDATA%/CrashDumps"],
+      "note": "Keep recent dumps if you are chasing a crash." },
+
+    { "id": "inetcache", "label": "Windows internet cache", "category": "app-cache", "tier": 1, "scope": "user",
+      "method": "files-older-than", "minAgeDays": 7, "paths": ["%LOCALAPPDATA%/Microsoft/Windows/INetCache"] },
+
+    { "id": "edge-cache", "label": "Microsoft Edge cache (all profiles)", "category": "browser", "tier": 1, "scope": "user",
+      "method": "files-older-than", "minAgeDays": 0,
+      "paths": ["%LOCALAPPDATA%/Microsoft/Edge/User Data/*/Cache", "%LOCALAPPDATA%/Microsoft/Edge/User Data/*/Code Cache", "%LOCALAPPDATA%/Microsoft/Edge/User Data/*/GPUCache"],
+      "requiresClosed": ["msedge"], "note": "Cache only. Cookies, logins, history, extensions and session data are never touched." },
+
+    { "id": "chrome-cache", "label": "Google Chrome cache (all profiles)", "category": "browser", "tier": 1, "scope": "user",
+      "method": "files-older-than", "minAgeDays": 0,
+      "paths": ["%LOCALAPPDATA%/Google/Chrome/User Data/*/Cache", "%LOCALAPPDATA%/Google/Chrome/User Data/*/Code Cache", "%LOCALAPPDATA%/Google/Chrome/User Data/*/GPUCache"],
+      "requiresClosed": ["chrome"] },
+
+    { "id": "brave-cache", "label": "Brave cache (all profiles)", "category": "browser", "tier": 1, "scope": "user",
+      "method": "files-older-than", "minAgeDays": 0,
+      "paths": ["%LOCALAPPDATA%/BraveSoftware/Brave-Browser/User Data/*/Cache", "%LOCALAPPDATA%/BraveSoftware/Brave-Browser/User Data/*/Code Cache", "%LOCALAPPDATA%/BraveSoftware/Brave-Browser/User Data/*/GPUCache"],
+      "requiresClosed": ["brave"] },
+
+    { "id": "firefox-cache", "label": "Firefox cache (all profiles)", "category": "browser", "tier": 1, "scope": "user",
+      "method": "files-older-than", "minAgeDays": 0, "paths": ["%LOCALAPPDATA%/Mozilla/Firefox/Profiles/*/cache2"],
+      "requiresClosed": ["firefox"] },
+
+    { "id": "discord-cache", "label": "Discord cache", "category": "app-cache", "tier": 1, "scope": "user",
+      "method": "files-older-than", "minAgeDays": 0,
+      "paths": ["%APPDATA%/discord/Cache", "%APPDATA%/discord/Code Cache", "%APPDATA%/discord/GPUCache"],
+      "requiresClosed": ["Discord"] },
+
+    { "id": "vscode-cache", "label": "VS Code caches", "category": "dev-tool", "tier": 1, "scope": "user",
+      "method": "files-older-than", "minAgeDays": 7,
+      "paths": ["%APPDATA%/Code/Cache", "%APPDATA%/Code/CachedData", "%APPDATA%/Code/Code Cache", "%APPDATA%/Code/GPUCache", "%APPDATA%/Code/logs"],
+      "requiresClosed": ["Code"], "note": "Settings, extensions and workspace state are not touched." },
+
+    { "id": "steam-logs", "label": "Steam logs and crash dumps", "category": "gaming-launcher", "tier": 1, "scope": "user",
+      "method": "files-older-than", "minAgeDays": 14, "paths": ["%STEAM%/logs", "%STEAM%/dumps"],
+      "note": "Never touches steamapps, userdata, config or shader caches." },
+
+    { "id": "steam-htmlcache", "label": "Steam client web cache", "category": "gaming-launcher", "tier": 2, "scope": "user",
+      "method": "files-older-than", "minAgeDays": 0, "paths": ["%LOCALAPPDATA%/Steam/htmlcache"],
+      "requiresClosed": ["steam", "steamwebhelper"], "note": "Store/community pages reload; you may need to sign in to web views again." },
+
+    { "id": "epic-webcache", "label": "Epic Games Launcher web cache and logs", "category": "gaming-launcher", "tier": 1, "scope": "user",
+      "method": "files-older-than", "minAgeDays": 7,
+      "paths": ["%LOCALAPPDATA%/EpicGamesLauncher/Saved/webcache*", "%LOCALAPPDATA%/EpicGamesLauncher/Saved/Logs"],
+      "requiresClosed": ["EpicGamesLauncher", "EpicWebHelper"] },
+
+    { "id": "gpu-shader-cache", "label": "GPU driver shader caches (AMD/NVIDIA/Intel/DirectX)", "category": "gpu-shader", "tier": 2, "scope": "user",
+      "method": "files-older-than", "minAgeDays": 0,
+      "paths": ["%LOCALAPPDATA%/AMD/DxCache", "%LOCALAPPDATA%/AMD/DxcCache", "%LOCALAPPDATA%/AMD/VkCache", "%LOCALAPPDATA%/AMD/GLCache",
+                "%LOCALAPPDATA%/D3DSCache", "%LOCALAPPDATA%/NVIDIA/DXCache", "%LOCALAPPDATA%/NVIDIA/GLCache", "%LOCALAPPDATA%/Intel/ShaderCache"],
+      "requiresClosed": ["RadeonSoftware"],
+      "note": "Games will recompile shaders (stutter on first launches). Only worthwhile after a GPU driver change or suspected cache corruption. AMD Adrenalin > Settings > Graphics > Reset Shader Cache is the vendor-supported equivalent." },
+
+    { "id": "amd-installer-leftovers", "label": "AMD driver installer extraction folder (C:/AMD)", "category": "installer-leftovers", "tier": 2, "scope": "admin",
+      "method": "files-older-than", "minAgeDays": 14, "paths": ["%SYSTEMDRIVE%/AMD"],
+      "note": "Adrenalin extracts installers here and never cleans up. Safe once the current driver is installed and working; you lose the offline re-install copy." },
+
+    { "id": "nvidia-installer-leftovers", "label": "NVIDIA driver installer extraction folder (C:/NVIDIA)", "category": "installer-leftovers", "tier": 2, "scope": "admin",
+      "method": "files-older-than", "minAgeDays": 14, "paths": ["%SYSTEMDRIVE%/NVIDIA"] },
+
+    { "id": "delivery-optimization", "label": "Delivery Optimization cache", "category": "system", "tier": 1, "scope": "admin",
+      "method": "delivery-optimization",
+      "measurePaths": ["%SYSTEMROOT%/ServiceProfiles/NetworkService/AppData/Local/Microsoft/Windows/DeliveryOptimization/Cache", "%SYSTEMROOT%/SoftwareDistribution/DeliveryOptimization"],
+      "note": "Uses the built-in Delete-DeliveryOptimizationCache cmdlet. Delivery Optimization itself stays enabled (Store and Game Pass downloads use it)." },
+
+    { "id": "component-store", "label": "Windows component store (WinSxS) cleanup", "category": "system", "tier": 2, "scope": "admin",
+      "method": "dism-component-cleanup",
+      "note": "Runs DISM /StartComponentCleanup WITHOUT /ResetBase, so installed updates can still be uninstalled. Can take 5-30 minutes. Size is estimated by /AnalyzeComponentStore (Deep mode, admin)." },
+
+    { "id": "npm-cache", "label": "npm cache", "category": "dev-tool", "tier": 1, "scope": "user",
+      "method": "tool-command", "measurePaths": ["%LOCALAPPDATA%/npm-cache/_cacache"], "command": { "exe": "npm", "args": ["cache", "verify"] },
+      "note": "'npm cache verify' garbage-collects unreferenced data only. A full 'npm cache clean --force' is tier 2 and must be requested explicitly." },
+
+    { "id": "pip-cache", "label": "pip cache", "category": "dev-tool", "tier": 1, "scope": "user",
+      "method": "tool-command", "measurePaths": ["%LOCALAPPDATA%/pip/cache"], "command": { "exe": "pip", "args": ["cache", "purge"] } },
+
+    { "id": "uv-cache", "label": "uv cache (unused entries)", "category": "dev-tool", "tier": 1, "scope": "user",
+      "method": "tool-command", "measurePaths": ["%LOCALAPPDATA%/uv/cache"], "command": { "exe": "uv", "args": ["cache", "prune"] } },
+
+    { "id": "pnpm-store", "label": "pnpm store (unreferenced packages)", "category": "dev-tool", "tier": 1, "scope": "user",
+      "method": "tool-command", "measurePaths": ["%LOCALAPPDATA%/pnpm/store"], "command": { "exe": "pnpm", "args": ["store", "prune"] } },
+
+    { "id": "yarn-cache", "label": "Yarn cache", "category": "dev-tool", "tier": 2, "scope": "user",
+      "method": "tool-command", "measurePaths": ["%LOCALAPPDATA%/Yarn/Cache"], "command": { "exe": "yarn", "args": ["cache", "clean"] },
+      "note": "Offline installs will re-download." },
+
+    { "id": "nuget-http-cache", "label": "NuGet HTTP cache", "category": "dev-tool", "tier": 1, "scope": "user",
+      "method": "tool-command", "measurePaths": ["%LOCALAPPDATA%/NuGet/v3-cache"], "command": { "exe": "dotnet", "args": ["nuget", "locals", "http-cache", "--clear"] },
+      "note": "global-packages is left alone (rebuilds would re-download everything)." },
+
+    { "id": "go-build-cache", "label": "Go build cache", "category": "dev-tool", "tier": 1, "scope": "user",
+      "method": "tool-command", "measurePaths": ["%LOCALAPPDATA%/go-build"], "command": { "exe": "go", "args": ["clean", "-cache"] } },
+
+    { "id": "docker-build-cache", "label": "Docker build cache", "category": "dev-tool", "tier": 2, "scope": "user",
+      "method": "tool-command", "measurePaths": [], "command": { "exe": "docker", "args": ["builder", "prune", "--force"] },
+      "note": "Build cache only. Images, containers and volumes are never pruned by this skill. Requires Docker Desktop running." },
+
+    { "id": "minidumps", "label": "Kernel minidumps (BSOD evidence)", "category": "diagnostics", "tier": 2, "scope": "admin",
+      "method": "files-older-than", "minAgeDays": 30, "paths": ["%SYSTEMROOT%/Minidump"],
+      "note": "Evidence for blue screens. Review crash history in the audit first." },
+
+    { "id": "memory-dmp", "label": "Full kernel memory dump (MEMORY.DMP)", "category": "diagnostics", "tier": 2, "scope": "admin",
+      "method": "file", "minAgeDays": 14, "paths": ["%SYSTEMROOT%/MEMORY.DMP"],
+      "note": "Evidence for the most recent blue screen." },
+
+    { "id": "live-kernel-reports", "label": "Live kernel reports (GPU TDR / hang evidence)", "category": "diagnostics", "tier": 2, "scope": "admin",
+      "method": "files-older-than", "minAgeDays": 30, "paths": ["%SYSTEMROOT%/LiveKernelReports"],
+      "note": "Evidence for GPU driver timeouts. Keep while diagnosing game crashes." },
+
+    { "id": "recycle-bin", "label": "Recycle Bin", "category": "user-review", "tier": 3, "scope": "user",
+      "method": "recycle-bin", "note": "Contains your deleted files. Only empty after you have confirmed nothing in it is needed." },
+
+    { "id": "windows-old", "label": "Previous Windows installation (Windows.old)", "category": "user-review", "tier": 3, "scope": "admin",
+      "method": "report-only", "measurePaths": ["%SYSTEMDRIVE%/Windows.old"],
+      "note": "Removing it ends the ability to roll back the last feature update. Use Settings > System > Storage > Temporary files > Previous Windows installation(s)." },
+
+    { "id": "windows-update-cleanup", "label": "Windows Update download cache", "category": "system", "tier": 3, "scope": "admin",
+      "method": "report-only", "measurePaths": ["%SYSTEMROOT%/SoftwareDistribution/Download"],
+      "note": "Use Settings > System > Storage > Temporary files > Windows Update Cleanup. Never stop update services to delete these by hand." },
+
+    { "id": "hiberfil", "label": "Hibernation file", "category": "never", "tier": 3, "scope": "admin",
+      "method": "report-only", "measurePaths": ["%SYSTEMDRIVE%/hiberfil.sys"],
+      "note": "Report only. Disabling hibernation also disables Fast Startup; this skill never does it automatically." },
+
+    { "id": "pagefile", "label": "Page file", "category": "never", "tier": 3, "scope": "admin",
+      "method": "report-only", "measurePaths": ["%SYSTEMDRIVE%/pagefile.sys", "%SYSTEMDRIVE%/swapfile.sys"],
+      "note": "Report only. Removing or shrinking the page file causes game and compiler crashes." }
+  ]
+}

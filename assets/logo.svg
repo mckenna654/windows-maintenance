@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160" role="img" aria-label="windows-maintenance logo">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f6cbd"/>
+      <stop offset="1" stop-color="#0a3d6b"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="152" height="152" rx="32" fill="url(#bg)"/>
+  <!-- four-pane window -->
+  <g fill="#ffffff" opacity="0.95">
+    <rect x="34" y="34" width="40" height="40" rx="4"/>
+    <rect x="80" y="34" width="40" height="40" rx="4"/>
+    <rect x="34" y="80" width="40" height="40" rx="4"/>
+  </g>
+  <!-- shield with check in the fourth pane -->
+  <path d="M100 80 l22 7 v14 c0 14 -10 22 -22 27 c-12 -5 -22 -13 -22 -27 v-14 z" fill="#3ecf8e"/>
+  <path d="M90 104 l7 7 l14 -15" fill="none" stroke="#0a3d6b" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

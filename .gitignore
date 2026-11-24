@@ -1,0 +1,11 @@
+# Runtime output lives in %LOCALAPPDATA%\WindowsMaintenance, never in the repo.
+*.log
+reports/
+results/
+backups/
+journal.jsonl
+.env
+.env.*
+Thumbs.db
+desktop.ini
+.DS_Store
