@@ -17,11 +17,15 @@
   - Before-and-after report.
 - `claude plugin validate` passes (warnings only: no version by design, no listing icon).
 
+- Real changes (2026-11-24): `SetPowerPlan`, and `DisableStartup` for HKCU-Run, HKLM-Run and a scheduled task. Values were checked in the registry and re-read correctly by the audit after fix dd8ffc1.
+- `New-RestorePoint.ps1` elevated, on the "Windows skipped: a restore point under 24 h old already exists" path.
+- `claude plugin marketplace update` + `claude plugin update` pulled a new commit into the installed plugin.
+
 ## Not yet verified
 
-- `Invoke-Change.ps1 -Execute` for every action, and `Undo-Change.ps1 -Execute` (dry runs only so far).
-- `New-RestorePoint.ps1` elevated; Deep mode elevated; full runs under Windows PowerShell 5.1.
-- An end-to-end auto-update after a push (the mechanism follows the Claude Code docs; not yet observed).
+- `SetServiceManual`, `RemoveAppx`, `SetGameMode` and `EnableStartup` with `-Execute`; `Undo-Change.ps1 -Execute`.
+- `New-RestorePoint.ps1` actually creating a new point (only the 24-hour-limit path was exercised); Deep mode elevated; full runs under Windows PowerShell 5.1.
+- Background auto-update arriving on its own after a push (only the manual update command has been run).
 
 ## Known issues / next steps
 
